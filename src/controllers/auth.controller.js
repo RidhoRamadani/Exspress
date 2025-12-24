@@ -26,9 +26,7 @@ exports.login = async (req, res, next) => {
     });
 
     if (pegawai) {
-      // Jika password di-hash
-      // const isMatch = await bcrypt.compare(password, pegawai.password);
-      // Jika plaintext (sementara)
+   
       const isMatch = password === pegawai.password;
 
       if (!isMatch) {
@@ -59,9 +57,7 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    /* ===============================
-       2. CEK KE TABEL PELANGGAN
-    =============================== */
+  
     const pelanggan = await prisma.pelanggan.findFirst({
       where: {
         username,
@@ -75,8 +71,7 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Jika password di-hash
-    // const isMatch = await bcrypt.compare(password, pelanggan.password);
+
     const isMatch = password === pelanggan.password;
 
     if (!isMatch) {
