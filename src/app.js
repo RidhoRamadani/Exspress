@@ -94,8 +94,30 @@ const cors = require("cors");
 
 const app = express();
 
+
 app.use(cors());
 app.use(express.json());
+
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "http://172.20.10.4:3000",
+
+    "https://rencar-barokah.vercel.app"
+
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
+
+
+app.use(errorHandler);
+
+ app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ message: "Internal Server Error" });
+});
 
 app.get("/", (req, res) => {
   res.send("Backend Vercel running 🚀");
