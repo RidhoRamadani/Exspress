@@ -8,6 +8,7 @@ exports.getTransaksiSchema = yup.object({
   })
 });
 
+
 // exports.createTransaksiSchema = yup.object({
 //   body: yup.object({
 //     id_pelanggan: yup.number().required("ID pelanggan wajib diisi"),
