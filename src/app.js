@@ -98,6 +98,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const mobilRoute = require("./routes/mobil.route");
+const pelangganRoute = require("./routes/pelanggan.route");
+const transaksiRoute = require("./routes/transaksi.route");
+const authRoute = require("./routes/auth.route");
+const errorHandler = require("./middlewares/errorHandler");
+
 app.use(cors({
   origin: [
     "http://localhost:3000",
@@ -110,6 +116,19 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 }));
+
+
+app.use("/auth", authRoute);
+app.use("/mobil", mobilRoute);
+app.use("/pelanggan", pelangganRoute);
+app.use("/transaksi", transaksiRoute);
+
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ message: "Internal Server Error" });
+});
+
 
 
 
