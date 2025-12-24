@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Mobil {
+  plat_mobil   String          @id(map: "PK__Mobil__40110538003988CB") @db.VarChar(20)
+  nama_mobil   String?         @db.VarChar(100)
+  merk         String?         @db.VarChar(100)
+  harga_sewa   Int?
+  status       String?         @db.VarChar(50)
+  created_by   String?         @db.VarChar(50)
+  created_date DateTime?       @db.DateTime
+  update_by    String?         @db.VarChar(50)
+  update_date  DateTime?       @db.DateTime
+  pemesanan    Trs_Pemesanan[] @relation("PemesananMobil")
+}
+
+model Pelanggan {
+  id_pelanggan   Int             @id(map: "PK__Pelangga__992956B93D688F6D") @default(autoincrement())
+  nama_pelanggan String?         @db.VarChar(100)
+  alamat         String?         @db.VarChar(100)
+  no_hp          String?         @db.VarChar(100)
+  username       String          @db.VarChar(100)
+  password       String          @db.VarChar(10)
+  status         String?         @db.VarChar(100)
+  created_by     String?         @db.VarChar(50)
+  created_date   DateTime?       @db.DateTime
+  update_by      String?         @db.VarChar(50)
+  update_date    DateTime?       @db.DateTime
+  id_role        Int?
+  Role           Role?           @relation(fields: [id_role], references: [id_role], onDelete: NoAction, onUpdate: NoAction, map: "FK_Pelanggan_Role")
+  pemesanan      Trs_Pemesanan[] @relation("PemesananPelanggan")
+}
+
+model Trs_Pemesanan {
+  id_pemesanan    Int        @id(map: "PK__Trs_Peme__D12D1D69BDC1C824") @default(autoincrement())
+  id_pelanggan    Int?
+  plat_mobil      String?    @db.VarChar(20)
+  tanggal_pesan   DateTime?  @db.Date
+  tanggal_selesai DateTime?  @db.Date
+  total_harga     Int?
+  created_by      String?    @db.VarChar(50)
+  created_date    DateTime?  @db.DateTime
+  pelanggan       Pelanggan? @relation("PemesananPelanggan", fields: [id_pelanggan], references: [id_pelanggan], onDelete: NoAction, onUpdate: NoAction, map: "FK__Trs_Pemes__id_pe__6166761E")
+  mobil           Mobil?     @relation("PemesananMobil", fields: [plat_mobil], references: [plat_mobil], onDelete: NoAction, onUpdate: NoAction, map: "FK__Trs_Pemes__plat___625A9A57")
+}
+
+model ErrorLog {
+  id            Int       @id(map: "PK__ErrorLog__3213E83F23FC583C") @default(autoincrement())
+  endpoint      String?   @db.VarChar(255)
+  method        String?   @db.VarChar(10)
+  error_message String?   @db.Text
+  stack_trace   String?   @db.Text
+  created_date  DateTime? @default(now(), map: "DF__ErrorLog__create__7849DB76") @db.DateTime
+}
+
+model Pegawai {
+  id_pegawai   Int       @id(map: "PK__Pegawai__6ACB8221D0BB59DA") @default(autoincrement())
+  id_role      Int?
+  nama_pegawai String?   @db.VarChar(100)
+  username     String?   @db.VarChar(100)
+  password     String?   @db.VarChar(100)
+  status       String?   @db.VarChar(100)
+  created_by   String?   @db.VarChar(100)
+  created_date DateTime? @db.DateTime
+  update_by    String?   @db.VarChar(100)
+  update_date  DateTime? @db.DateTime
+  Role         Role?     @relation(fields: [id_role], references: [id_role], onDelete: NoAction, onUpdate: NoAction, map: "FK__Pegawai__id_role__0A688BB1")
+}
+
+model Role {
+  id_role   Int         @id(map: "PK__Role__3D48441D3C96E565") @default(autoincrement())
+  nama_role String?     @db.VarChar(100)
+  Pegawai   Pegawai[]
+  Pelanggan Pelanggan[]
+}
