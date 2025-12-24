@@ -112,12 +112,6 @@ app.use(cors({
 }));
 
 
-app.use(errorHandler);
-
- app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ message: "Internal Server Error" });
-});
 
 app.get("/", (req, res) => {
   res.send("Backend Vercel running 🚀");
