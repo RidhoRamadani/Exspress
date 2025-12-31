@@ -46,6 +46,7 @@ model Trs_Pemesanan {
   total_harga     Int?
   created_by      String?    @db.VarChar(50)
   created_date    DateTime?  @db.DateTime
+  comment         String?     @db.Text
   pelanggan       Pelanggan? @relation("PemesananPelanggan", fields: [id_pelanggan], references: [id_pelanggan], onDelete: NoAction, onUpdate: NoAction, map: "FK__Trs_Pemes__id_pe__6166761E")
   mobil           Mobil?     @relation("PemesananMobil", fields: [plat_mobil], references: [plat_mobil], onDelete: NoAction, onUpdate: NoAction, map: "FK__Trs_Pemes__plat___625A9A57")
 }

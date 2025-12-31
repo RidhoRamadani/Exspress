@@ -1,24 +1,14 @@
-const yup = require("yup");
+import * as yup from "yup";
 
-exports.getTransaksiSchema = yup.object({
+export const getTransaksiSchema = yup.object({
   query: yup.object({
     page: yup.number().min(1).default(1),
     limit: yup.number().min(1).max(50).default(10),
-    search: yup.string().nullable()
-  })
+    search: yup.string().nullable(),
+  }),
 });
 
-
-// exports.createTransaksiSchema = yup.object({
-//   body: yup.object({
-//     id_pelanggan: yup.number().required("ID pelanggan wajib diisi"),
-//     plat_mobil: yup.string().required("Plat mobil wajib diisi"),
-//     tanggal_pesan: yup.date().nullable(),
-//     tanggal_selesai: yup.date().nullable(),
-//     total_harga: yup.number().nullable()
-//   })
-// });
-exports.createTransaksiSchema = yup.object({
+export const createTransaksiSchema = yup.object({
   body: yup.object({
     id_pelanggan: yup
       .number()
@@ -27,11 +17,7 @@ exports.createTransaksiSchema = yup.object({
 
     plat_mobil: yup
       .array()
-      .of(
-        yup
-          .string()
-          .required("Plat mobil tidak boleh kosong")
-      )
+      .of(yup.string().required("Plat mobil tidak boleh kosong"))
       .min(1, "Minimal pilih 1 mobil")
       .required("Mobil wajib dipilih"),
 
@@ -48,8 +34,7 @@ exports.createTransaksiSchema = yup.object({
         yup.ref("tanggal_pesan"),
         "Tanggal selesai harus sama atau setelah tanggal pesan"
       ),
+
+      comment: yup.string().required("Comment wajib diisi"),
   }),
 });
-
-
-

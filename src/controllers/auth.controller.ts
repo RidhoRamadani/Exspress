@@ -1,8 +1,14 @@
-const prisma = require("../config/prisma");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import { Request, Response, NextFunction } from "express";
+import prisma from "../config/prisma";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-exports.login = async (req, res, next) => {
+interface AuthRequestBody {
+  username: string;
+  password: string;
+}
+
+export const login = async (req: Request<{}, {}, AuthRequestBody>, res: Response, next: NextFunction) => {
   try {
     const { username, password } = req.body;
 
@@ -12,21 +18,18 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    /* ===============================
-       1. CEK KE TABEL PEGAWAI
-    =============================== */
     const pegawai = await prisma.pegawai.findFirst({
       where: {
         username,
         status: "Aktif",
       },
       include: {
-        Role: true, // kalau ada relasi role
+        Role: true, 
       },
     });
 
     if (pegawai) {
-   
+
       const isMatch = password === pegawai.password;
 
       if (!isMatch) {
@@ -40,7 +43,7 @@ exports.login = async (req, res, next) => {
           id: pegawai.id_pegawai,
           role: "pegawai",
         },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET as string,
         { expiresIn: "1d" }
       );
 
@@ -57,7 +60,6 @@ exports.login = async (req, res, next) => {
       });
     }
 
-  
     const pelanggan = await prisma.pelanggan.findFirst({
       where: {
         username,
@@ -70,7 +72,6 @@ exports.login = async (req, res, next) => {
         message: "Username atau password salah",
       });
     }
-
 
     const isMatch = password === pelanggan.password;
 
@@ -85,7 +86,7 @@ exports.login = async (req, res, next) => {
         id: pelanggan.id_pelanggan,
         role: "pelanggan",
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET as string,
       { expiresIn: "1d" }
     );
 
